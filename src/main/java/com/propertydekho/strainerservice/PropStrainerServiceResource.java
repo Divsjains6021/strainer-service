@@ -2,6 +2,7 @@ package com.propertydekho.strainerservice;
 
 import com.propertydekho.strainerservice.models.PropFilter;
 import com.propertydekho.strainerservice.models.PropFilterableSortableData;
+import com.propertydekho.strainerservice.models.PropsFilterInput;
 import com.propertydekho.strainerservice.models.PropMetaDataList;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,11 +16,15 @@ import java.util.stream.Collectors;
 public class PropStrainerServiceResource {
 
     @RequestMapping("/filter-prop-metadata")
-    public PropMetaDataList filterPropMetadata(@RequestBody PropMetaDataList propMetadataList, @RequestBody PropFilter propFilter) {
+    public PropMetaDataList filterPropMetadata(@RequestBody PropsFilterInput propsFilterInput) {
 
+        PropFilter propFilter = propsFilterInput.getPropFilter();
         List<PropFilterableSortableData> propFilterableSortableData =
-                propMetadataList.getPropFilterableSortableData().stream()
-                        .filter(property -> propFilter.getFilterValue().equalsIgnoreCase(property.getAttr(propFilter.getFilterType())))
+                propsFilterInput.getPropMetaDataList().getPropFilterableSortableData().stream()
+                        .filter(property ->
+
+                                propFilter.getFilterValue().equalsIgnoreCase(property.getAttr(propFilter.getFilterType()))
+                        )
                         .collect(Collectors.toList());
 
         return PropMetaDataList.builder().propFilterableSortableData(propFilterableSortableData).build();

@@ -40,7 +40,7 @@ public class PropFilterableSortableData {
     }
 
     public String getAttr(String filterType) {
-        if ("construction_status".equalsIgnoreCase(filterType)) {
+        if ("constructn_status".equalsIgnoreCase(filterType)) {
             return getConstructionStatus();
         }
         if ("sale_type".equalsIgnoreCase(filterType)) {
