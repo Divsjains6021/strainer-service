@@ -46,9 +46,10 @@ public class PropStrainerServiceResource {
 
         Map<String, PropMetaDataList> filteredIndexedProperties = new HashMap<>();
         indexedProperties.keySet()
-                .forEach(key -> {
-                    PropMetaDataList propMetaDataList = indexedProperties.get(key);
-                    filteredIndexedProperties.put(key, filterProperties(propMetaDataList, propFilters));
+                .parallelStream()
+                .forEach(area -> {
+                    PropMetaDataList propMetaDataList = indexedProperties.get(area);
+                    filteredIndexedProperties.put(area, filterProperties(propMetaDataList, propFilters));
                 });
 
         PropMetaDataList nonIndexedProperties = propertiesList.getNonIndexedProperties();
@@ -63,6 +64,7 @@ public class PropStrainerServiceResource {
     private PropMetaDataList filterProperties(PropMetaDataList propList, List<PropFilter> filters) {
         List<PropFilterableSortableData> props = propList.getPropFilterableSortableData();
         props = props.stream()
+                .parallel()
                 .filter(getPropFilterableSortableDataPredicate(filters))
                 .collect(Collectors.toList());
 
